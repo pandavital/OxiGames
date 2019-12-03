@@ -10,13 +10,13 @@ import java.util.List;
 
 public class JogoDao {
 
-	private Connection connection;
+	private static Connection connection;
 
 	public JogoDao() {
-		this.connection = Conexao.connect();
+		JogoDao.connection = Conexao.connect();
 	}
 
-	public void adicionar(Jogo jogo) {
+	public static void adicionar(Jogo jogo) {
 		String sql = "insert into jogo " + "(Id_jogo,nome,Id_genero,Id_nota,descricao,data)" + " values (?,?,?,?,?,?)";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
@@ -29,11 +29,11 @@ public class JogoDao {
 			stmt.execute();
 			stmt.close();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			System.out.println(e);;
 		}
 	}
 
-	public void remove(Long id) {
+	public static void remove(Integer id) {
 		try {
 			PreparedStatement stmt = connection.prepareStatement("delete from produto where id_acai=?");
 			stmt.setLong(1, id);
@@ -44,7 +44,7 @@ public class JogoDao {
 		}
 	}
 
-	public void altera(Jogo jogo) {
+	public static void altera(Jogo jogo) {
 		String sql = "update produto set Id_jogo=?, nome=? ,Id_genero=? ,Id_nota=?,descricao=?, data_lancamento  where id_jogo=?";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
@@ -57,16 +57,16 @@ public class JogoDao {
 			stmt.execute();
 			stmt.close();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			System.out.println(e);
 		}
 	}
 
-	public List<Jogo> getLista() {
+	public static List<Jogo> getLista() {
 
 		try {
 			List<Jogo> jogos = new ArrayList<Jogo>();
 			String sql = "select * from jogo";
-			PreparedStatement stmt = this.connection.prepareStatement(sql);
+			PreparedStatement stmt = JogoDao.connection.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
@@ -87,7 +87,7 @@ public class JogoDao {
 			throw new RuntimeException(e);
 		}
 	}
-	public Jogo getJogo(Long id) {
+	public static Jogo getJogo(Integer id) {
 		String sql = "select * from jogo where id_jogo=?";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
